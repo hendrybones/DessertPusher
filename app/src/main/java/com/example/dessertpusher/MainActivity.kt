@@ -16,6 +16,9 @@ import timber.log.Timber
 class MainActivity : AppCompatActivity(){
     private var  revenue=0
     private var dessertsSold=0
+    private lateinit var desssertTimer: DesssertTimer
+
+    //
 
     //contains all views
     private  lateinit var binding: ActivityMainBinding
@@ -42,11 +45,13 @@ class MainActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i("MainActivity","onCreated called")
+        dessertsSold=0
         binding=DataBindingUtil.setContentView(this,R.layout.activity_main)
 
         binding.dessertButton.setOnClickListener {
             onDessertClicked()
         }
+        desssertTimer= DesssertTimer()
         // Set the TextViews to the right values
         binding.revenue = revenue
         binding.amountSold = dessertsSold
@@ -117,5 +122,27 @@ class MainActivity : AppCompatActivity(){
         super.onStart()
         Log.i("MainActivity","onCreated called")
         Timber.i("onStart called")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        desssertTimer.startTimer()
+        Timber.i("onResume called")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Timber.i("onPause called")
+    }
+
+    override fun onStop() {
+        super.onStop()
+      desssertTimer.stopTimer()
+        Timber.i("onStop called")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Timber.i("onDestroyed called")
     }
 }
