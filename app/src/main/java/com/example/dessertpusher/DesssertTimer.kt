@@ -1,9 +1,12 @@
 package com.example.dessertpusher
 
 import android.os.Handler
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import timber.log.Timber
 
-class DesssertTimer {
+class DesssertTimer(lifecycle: Lifecycle): LifecycleObserver{
     //The number of seconds counted since the timer started
     var secondsCount = 0
 
@@ -13,8 +16,15 @@ class DesssertTimer {
      */
     private var handler = Handler()
     private lateinit var runnable: Runnable
+    init {
+        lifecycle.addObserver(this)
+    }
+//    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+//    fun dummyMethod(){
+//        Timber.i("i was called")
+//    }
 
-
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun startTimer() {
         // Create the runnable action, which prints out a log and increments the seconds counter
         runnable = Runnable {
@@ -32,7 +42,7 @@ class DesssertTimer {
         // Note that the Thread the handler runs on is determined by a class called Looper.
         // In this case, no looper is defined, and it defaults to the main or UI thread.
     }
-
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun stopTimer() {
         // Removes all pending posts of runnable from the handler's queue, effectively stopping the
         // timer

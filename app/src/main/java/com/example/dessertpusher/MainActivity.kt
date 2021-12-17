@@ -12,8 +12,11 @@ import androidx.core.app.ShareCompat
 import androidx.databinding.DataBindingUtil
 import com.example.dessertpusher.databinding.ActivityMainBinding
 import timber.log.Timber
-
+const val KEY_REVENUE="key_revenue"
+const val KEY_DESSERTS_SOLD="key_dessertsSold"
 class MainActivity : AppCompatActivity(){
+
+
     private var  revenue=0
     private var dessertsSold=0
     private lateinit var desssertTimer: DesssertTimer
@@ -51,13 +54,19 @@ class MainActivity : AppCompatActivity(){
         binding.dessertButton.setOnClickListener {
             onDessertClicked()
         }
-        desssertTimer= DesssertTimer()
+        desssertTimer= DesssertTimer(this.lifecycle)
+        //saaving the data from the activity after the app is inactive
+        if (savedInstanceState !=null){
+            revenue=savedInstanceState.getInt(KEY_REVENUE)
+            dessertsSold=savedInstanceState.getInt(KEY_DESSERTS_SOLD)
+        }
         // Set the TextViews to the right values
         binding.revenue = revenue
         binding.amountSold = dessertsSold
 
         // Make sure the correct dessert is showing
         binding.dessertButton.setImageResource(currentDessert.imageId)
+
 
     }
 
@@ -117,6 +126,13 @@ class MainActivity : AppCompatActivity(){
         }
         return super.onOptionsItemSelected(item)
     }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(KEY_REVENUE,revenue)
+        outState.putInt("key_dessertsSold",dessertsSold)
+
+        Timber.i("onSavedInstance is called")
+    }
 
     override fun onStart() {
         super.onStart()
@@ -126,8 +142,8 @@ class MainActivity : AppCompatActivity(){
 
     override fun onResume() {
         super.onResume()
-        desssertTimer.startTimer()
-        Timber.i("onResume called")
+//        desssertTimer.startTimer()
+//        Timber.i("onResume called")
     }
 
     override fun onPause() {
@@ -137,7 +153,7 @@ class MainActivity : AppCompatActivity(){
 
     override fun onStop() {
         super.onStop()
-      desssertTimer.stopTimer()
+//      desssertTimer.stopTimer()
         Timber.i("onStop called")
     }
 
